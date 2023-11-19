@@ -57,4 +57,4 @@ class ConnectToDb:
         data = {"finger": finger_binary, "knuckle": knuckle_binary}
         self.db[collection].insert_one(data)
         new_data_count = self.db[collection].count_documents({})
-        log.info(f"{new_data_count - available_data} added to the {collection} collection.")
+        log.info(f"{new_data_count - available_data} data added to the {collection} collection.")
