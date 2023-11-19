@@ -1,0 +1,9 @@
+colorlog
+imageio
+matplotlib
+opencv-python
+pandas
+pymongo
+scikit-image
+scipy
+sshtunnel
