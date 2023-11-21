@@ -2,6 +2,7 @@
 
 import base64
 
+import numpy as np
 import pandas
 import pymongo
 
@@ -28,33 +29,31 @@ class ConnectToDb:
         self.client.close()
         log.info("Database connection closed.")
 
-    def get_collections(self, collection: str = "minutiae") -> pandas.DataFrame:
+    def get_collection_data(self, collection: str = "minutiae") -> pandas.DataFrame:
         """
         Fetch data from the database collection.
-        
+
         :param collection: Database collection name.
         :return: A pandas data frame containing extracted data from the collection."""
         assert collection in self.available_collections, "The collection does not exist in the database."
-        log.info(f"Getting Minutiae features from {collection}.")
+        log.info(f"Getting Minutiae features from the collection {collection}.")
         cursor = self.db[collection].find()
         data = list(cursor)
         return pandas.DataFrame(data)
     
-    def upload_data(self, finger_data_path, knuckle_data_path, collection: str = "minutiae") -> None:
+    def upload_data(self, finger_data: np.ndarray, knuckle_data: np.ndarray, collection: str = "minutiae") -> None:
         """
         Upload finger and knuckle print data to mongodb.
-        
-        :param finger_data_path: Path to the finger_print_minutiae.
-        :param knuckle_data_path: Path to the knuckle_print_minutiae.
+
+        :param finger_data: Finger print minutiae as a numpy n-dimensional array.
+        :param knuckle_data: Knuckle print minutiae as a numpy n-dimensional array.
         """
-        assert collection in self.available_collections, "The collection does not exist in the database."
-        available_data = collection.count_documents({})
+        assert collection in self.available_collections, "The col lection does not exist in the database."
+        available_data = self.db[collection].count_documents({})
         log.info("Uploading finger and knuckle data to database ...")
-        with open(finger_data_path, "rb") as finger_data:
-            finger_binary = base64.b64encode(finger_data.read())
-        with open(knuckle_data_path, "rb") as knuckle_data:
-            knuckle_binary = base64.b64encode(knuckle_data.read())
+        finger_binary = base64.b64encode(finger_data)
+        knuckle_binary = base64.b64encode(knuckle_data)
         data = {"finger": finger_binary, "knuckle": knuckle_binary}
-        collection.insert_one(data)
-        new_data_count = collection.count_documents({})
-        log.info(f"{new_data_count - available_data} added to the {collection} collection.")
+        self.db[collection].insert_one(data)
+        new_data_count = self.db[collection].count_documents({})
+        log.info(f"{new_data_count - available_data} data added to the {collection} collection.")

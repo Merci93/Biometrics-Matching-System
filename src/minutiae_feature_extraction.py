@@ -24,15 +24,14 @@ class MinutiaeFeature(object):
 class FingerPrintMinutiae():
     "Extract finger and knuckle print features."
 
-    def __init__(self, image_path: str, save_path: str):
+    def __init__(self, image_path: str, save_path: str = None):
         "Extract and process finger and knuckle print minutiae."
         self.save_path = save_path
         self.image_path = image_path
         self.base_name = os.path.basename(image_path)
-        self.image = imageio.v3.imread(image_path)
-        self.threshold = self.image.mean()
+        self.threshold = imageio.v3.imread(image_path).mean()
 
-    def get_termination_bifurcation(self, img, mask):
+    def get_termination_bifurcation(self, img: np.ndarray, mask: np.ndarray):
         """get termination bifurcation."""
         img = img == 255
         rows, cols = img.shape
@@ -54,7 +53,7 @@ class FingerPrintMinutiae():
         minutiae_term = np.uint8(mask) * minutiae_term
         return minutiae_term, minutiae_bif
 
-    def compute_angle(self, block, minutiae_type: str):
+    def compute_angle(self, block: np.ndarray, minutiae_type: str):
         """Compute angle"""
         angle = 0
         blk_rows, blk_cols = np.shape(block)
@@ -83,7 +82,7 @@ class FingerPrintMinutiae():
                 angle = float("nan")
                 return angle
 
-    def extract_minutiae_features(self, skel, minutiae_term, minutiae_bif) -> list:
+    def extract_minutiae_features(self, skel: np.ndarray, minutiae_term: np.ndarray, minutiae_bif: np.ndarray) -> list:
         """Extract minutiae features from provided finger or knuckle print image."""
         minutiae_term = skimage.measure.label(minutiae_term, connectivity=2)
         rp = skimage.measure.regionprops(minutiae_term)
@@ -106,7 +105,7 @@ class FingerPrintMinutiae():
             features_bif.append(MinutiaeFeature(row, col, angle, "Bifurcation"))
         return features_term, features_bif
 
-    def process_data(self) -> None:
+    def process_data(self, run_local: bool = False) -> None:
         """Perform finger/knuckle print image processing."""
         img = cv2.imread(self.image_path, 0)
         img = np.array(img > self.threshold).astype(int)
@@ -115,19 +114,22 @@ class FingerPrintMinutiae():
         mask = img * 255
 
         minutiae_term, minutiae_bif = self.get_termination_bifurcation(skel, mask)
-        features_term, features_bif =self.extract_minutiae_features(skel, minutiae_term, minutiae_bif)
-        bif_label = skimage.measure.label(minutiae_bif, connectivity=1)
-        term_label = skimage.measure.label(minutiae_term, connectivity=1)
+        features_term, features_bif = self.extract_minutiae_features(skel, minutiae_term, minutiae_bif)
+        skimage.measure.label(minutiae_bif, connectivity=1)
+        skimage.measure.label(minutiae_term, connectivity=1)
 
         result_image = np.zeros((skel.shape[0], skel.shape[1], 3), dtype=np.uint8)
         result_image[:, :, 0] = skel
         result_image[:, :, 1] = skel
         result_image[:, :, 2] = skel
-
+        
         desired_size = (800, 800)
         result_image = cv2.resize(result_image, desired_size)
-
         saved_data = os.listdir(self.save_path)
-        processed_files = [os.path.basename(file) for file in saved_data if file.endswith("BMP")]
-        if self.base_name not in processed_files:
-            cv2.imwrite(os.path.join(self.save_path, f"{self.base_name}"), result_image)
+        
+        if run_local == True:
+            processed_files = [os.path.basename(file) for file in saved_data if file.endswith("BMP")]
+            if self.base_name not in processed_files:
+                cv2.imwrite(os.path.join(self.save_path, f"{self.base_name}"), result_image)
+        else:
+            return result_image
