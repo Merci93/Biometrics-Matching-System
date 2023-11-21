@@ -37,6 +37,7 @@ def check_db_match(finger_print_path: str, knuckle_print_path: str) -> (bool, np
     finger_input = process_finger.process_data()
     knuckle_input = process_knuckle.process_data()
 
+    log.info("Matching prints ...")
     for _, row in database_data.iterrows():
         decode_finger = np.frombuffer(base64.b64decode(row["finger"]), dtype=np.uint8).reshape(finger_input.shape)
         decode_knuckle = np.frombuffer(base64.b64decode(row["knuckle"]),
@@ -72,4 +73,4 @@ if __name__ == "__main__":
     finger_print_fail = r"../data/test_data/fail/finger"
     knuckle_print_fail = r"../data/test_data/fail/knuckle"
     
-    run(finger_print_fail, knuckle_print_fail, False)
+    run(finger_print_pass, knuckle_print_pass, False)
