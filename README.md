@@ -17,6 +17,7 @@ The flow diagram is as attached below:
 ![](images/flow_diagram.png)
 
 ## MongoDB setup
+The MongoDB setup includes a database (finger_knuckle_prints) and a collection (minutiae) as show below:
 ![](images/mongo_db_setup.png)
 
 ## Finger and Knuckle Print Pass
