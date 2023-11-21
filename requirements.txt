@@ -1,6 +1,5 @@
 colorlog
 imageio
-matplotlib
 opencv-python
 pandas
 pymongo
