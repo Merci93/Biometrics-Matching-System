@@ -56,7 +56,7 @@ def check_db_match(finger_print_path: str, knuckle_print_path: str) -> (bool, np
         return False, finger_input, knuckle_input
     connection.close()
 
-def run(finger_print_path: str, knuckle_print_path: str, update_db: bool = True) -> None:
+def run(finger_print_path: str, knuckle_print_path: str, update_db: bool = False) -> None:
     """Run"""
     match, finger, knuckle = check_db_match(finger_print_path, knuckle_print_path)
     if not match and update_db:
