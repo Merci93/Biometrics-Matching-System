@@ -22,5 +22,5 @@ The flow diagram is as attached below:
 ## Finger and Knuckle Print Pass
 ![](images/print_pass.png)
 
-## Finger and Knuckle print fail
+## Finger and Knuckle Print Fail
 ![](images/print_fail.png)
