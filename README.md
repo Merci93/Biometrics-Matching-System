@@ -21,7 +21,7 @@ The MongoDB setup includes a database (finger_knuckle_prints) and a collection (
 ![](images/mongo_db_setup.png)
 
 ## Finger and Knuckle Print Pass
-![](images/print_pass.png)
+![](images/finger_knuckle_print_pass.png)
 
 ## Finger and Knuckle Print Fail
-![](images/print_fail.png)
+![](images/finger_knuckle_print_fail.png)
