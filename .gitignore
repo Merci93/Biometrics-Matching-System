@@ -1,0 +1,5 @@
+.vscode/
+env/
+flow_diagram.drawio
+flow_diagram.drawio.pdf
+__pycache__/

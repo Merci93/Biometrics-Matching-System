@@ -1,5 +1,5 @@
 """
-Initial data uploade to mongodb collection.
+Initial data upload to mongodb collection.
 Process finger and knuckle prints and upload to MongoDB collection to create a reference data for comparison.
 """
 

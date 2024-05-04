@@ -122,12 +122,12 @@ class FingerPrintMinutiae():
         result_image[:, :, 0] = skel
         result_image[:, :, 1] = skel
         result_image[:, :, 2] = skel
-        
+
         desired_size = (800, 800)
         result_image = cv2.resize(result_image, desired_size)
         saved_data = os.listdir(self.save_path)
-        
-        if run_local == True:
+
+        if run_local:
             processed_files = [os.path.basename(file) for file in saved_data if file.endswith("BMP")]
             if self.base_name not in processed_files:
                 cv2.imwrite(os.path.join(self.save_path, f"{self.base_name}"), result_image)
