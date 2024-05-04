@@ -17,10 +17,10 @@ from logger import log
 from minutiae_feature_extraction import FingerPrintMinutiae
 
 
-def check_db_match(finger_print_path: str, knuckle_print_path: str) -> (bool, np.ndarray, np.ndarray):
+def check_db_match(finger_print_path: str, knuckle_print_path: str) -> bool | np.ndarray | np.ndarray:
     """
     Run finger and knuckle print match with connection to MongoDB.
-    
+
     :param finger_print_path: Path to finger print data to be processed.
     :param knuckl_print_path: Path to knuckle print data to be processed.
     :return: True if a match is found or False if no match is found, with finger and knuckle print numpy array.
@@ -44,18 +44,19 @@ def check_db_match(finger_print_path: str, knuckle_print_path: str) -> (bool, np
                                        dtype=np.uint8).reshape(knuckle_input.shape)
         finger_fusion_score = compare_fingerprints(finger_input, decode_finger)
         knuckle_fusion_score = compare_fingerprints(knuckle_input, decode_knuckle)
-        
+
         if finger_fusion_score >= 0.9 and knuckle_fusion_score >= 0.9:
             log.info(f"Match found!!!\n"
-                    f"\t\t\t      Finger score: {round(finger_fusion_score, 5)}\n"
-                    f"\t\t\t      Knuckle score: {round(knuckle_fusion_score, 5)}\n"
-                    f"\t\t\t      Average score: {round((finger_fusion_score + knuckle_fusion_score) / 2, 5)}")
+                     f"\t\t\t      Finger score: {round(finger_fusion_score, 5)}\n"
+                     f"\t\t\t      Knuckle score: {round(knuckle_fusion_score, 5)}\n"
+                     f"\t\t\t      Average score: {round((finger_fusion_score + knuckle_fusion_score) / 2, 5)}")
             return True, finger_input, knuckle_input
 
     if finger_fusion_score < 0.9 or knuckle_fusion_score < 0.9:
         log.info("No match found in the database.")
         return False, finger_input, knuckle_input
     connection.close()
+
 
 def run(finger_print_path: str, knuckle_print_path: str, update_db: bool = False) -> None:
     """Run"""
@@ -72,5 +73,5 @@ if __name__ == "__main__":
 
     finger_print_fail = r"../data/test_data/fail/finger"
     knuckle_print_fail = r"../data/test_data/fail/knuckle"
-    
+
     run(finger_print_pass, knuckle_print_pass, False)

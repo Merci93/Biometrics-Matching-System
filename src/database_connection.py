@@ -17,12 +17,14 @@ class ConnectToDb:
         mongo_db_uri = "mongodb://localhost:27017"
         self.client = pymongo.MongoClient(mongo_db_uri)
         self.db = self.client["finger_knuckle_prints"]
-        self.available_collections = [collection["name"] for collection in self.db.list_collections()]
+        self.available_collections = [
+            collection["name"] for collection in self.db.list_collections()
+        ]
         if self.client.server_info()["ok"]:
             log.info("Successfully connected to MongoDB database.")
             log.info(f"Available collections: {self.available_collections}")
         else:
-            log.debug("Unable to connect to the database.")
+            log.error("Unable to connect to the database.")
 
     def close(self) -> None:
         """Close database connection."""
@@ -40,7 +42,7 @@ class ConnectToDb:
         cursor = self.db[collection].find()
         data = list(cursor)
         return pandas.DataFrame(data)
-    
+
     def upload_data(self, finger_data: np.ndarray, knuckle_data: np.ndarray, collection: str = "minutiae") -> None:
         """
         Upload finger and knuckle print data to mongodb.
