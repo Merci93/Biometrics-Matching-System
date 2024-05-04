@@ -1,8 +1,9 @@
-colorlog
-imageio
-opencv-python
-pandas
-pymongo
-scikit-image
-scipy
-sshtunnel
+colorlog==6.8.2
+imageio==2.34.1
+numpy==1.26.4
+opencv-python==4.9.0.80
+pandas==2.2.2
+pymongo==4.7.1
+scikit-image==0.23.2
+scipy==1.13.0
+sshtunnel==0.4.0
