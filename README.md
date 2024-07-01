@@ -1,4 +1,4 @@
-# Finger_and_Knuckle_Print_Matching
+# Biometrics Matching System
 A finger and knuckle print matching algorithm. the algorithm uses both finger and knuckle prints to identify an individual. The finger and knuckle prints are passed through `minutiae_feature_extraction`. The minutiae feature of the input finger is compared with the available data in the MongoDB collection `minutiae` and the fussion score calculated. The score threshold is set at **90%** for both finger and knuckle prints to pass the detetction algorithm.
 
 ## Run instructions
